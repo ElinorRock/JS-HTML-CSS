@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+        .section {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .section h2 {
+            margin-top: 0;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .logout {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #333;
+            cursor: pointer;
+        }
+        .credit {
+            position: absolute;
+            top: 50px;
+            left: 20px;
+            color: #333;
+        }
+        .name {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="name">Elinor Lebel</div>
+    <button class="logout" onclick="logout()">Log Out</button>
+    <div class="credit">Credit: 7</div>
+    <div class="container">
+        <div class="section">
+            <h2>Departments Main Page</h2>
+            <p>Manage departments</p>
+            <button class="button" onclick="getDepartments()">Go To Managing Departments</button>
+            <div id="departmentsData"></div>
+        </div>
+        <div class="section">
+            <h2>Employee Main Page</h2>
+            <p>Manage employees</p>
+            <button class="button" onclick="getEmployee()">Go To Managing Employees</button>
+            <div id="employeeData"></div>
+        </div>
+        <div class="section">
+            <h2>Shifts Main Page</h2>
+            <p>Manage shifts</p>
+            <button class="button" onclick="getEmployeeWithShifts()">Go To Managing Employee Shifts</button>
+            <div id="employeeShiftsData"></div>
+        </div>
+    </div>
+
+    <script>
+        async function getDepartments() {
+            try {
+                let resp = await fetch("https://localhost:44303/api/Department");
+                let data = await resp.json();
+                document.getElementById("departmentsData").innerText = JSON.stringify(data);
+            } catch (error) {
+                console.error('Error fetching departments:', error);
+                document.getElementById("departmentsData").innerText = "Error fetching departments";
+            }
+        }
+
+        async function getEmployee() {
+            try {
+                let resp = await fetch("https://localhost:44303/api/Employee");
+                let data = await resp.json();
+                // Convert JSON data to a nicely formatted string with 2-space indentation
+                let formattedData = JSON.stringify(data, null, 2);
+                document.getElementById("employeeData").innerText = formattedData;
+            } catch (error) {
+                console.error('Error fetching employees:', error);
+                document.getElementById("employeeData").innerText = "Error fetching employees";
+            }
+        }
+
+        async function getEmployeeWithShifts() {
+            try {
+                let resp = await fetch("https://localhost:44303/api/shift");
+                let data = await resp.json();
+                document.getElementById("employeeShiftsData").innerText = JSON.stringify(data);
+            } catch (error) {
+                console.error('Error fetching employee shifts:', error);
+                document.getElementById("employeeShiftsData").innerText = "Error fetching employee shifts";
+            }
+        }
+
+        function logout() {
+            // Redirect to login page
+            window.location.href = "./userlogin.html";
+        }
+
+        function redirectUser() {
+            console.log("Redirecting...");
+            window.location.href = "./Factory/Factory.html";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Shifts</title>
+    <style>
+        /* CSS styles for the table */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+        }
+        #employeeTable {
+            margin: 20px auto;
+            width: 80%;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+            font-weight: bold;
+        }
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Employee Shifts</h1>
+    <button class="logout" onclick="logout()">Log Out</button>
+    <div id="employeeTable"></div>
+
+    <script>
+        async function fetchAndPopulateTable() {
+            try {
+                const data = [
+                    { ShiftID: 1, DateShift: '2025-01-01 00:00:00.000', StartTime: 10, EndTime: 14 },
+                    { ShiftID: 2, DateShift: '2025-01-02 00:00:00.000', StartTime: 14, EndTime: 18 },
+                    { ShiftID: 3, DateShift: '2025-01-03 00:00:00.000', StartTime: 18, EndTime: 22 }
+                ];
+    
+                var table = document.createElement("table");
+                var headerRow = table.insertRow();
+                // Create header cells
+                for (var header in data[0]) {
+                    var th = document.createElement("th");
+                    th.textContent = header;
+                    headerRow.appendChild(th);
+                }
+    
+                // Populate data into table
+                data.forEach(function(shift) {
+                    var row = table.insertRow();
+                    for (var key in shift) {
+                        var cell = row.insertCell();
+                        cell.textContent = shift[key];
+                    }
+                });
+    
+                // Append table to the DOM
+                document.getElementById("employeeTable").appendChild(table);
+            } catch (error) {
+                console.error('Error fetching employee data:', error);
+                document.getElementById("employeeTable").innerText = "Error fetching employee data";
+            }
+        }
+    
+        fetchAndPopulateTable();
+
+        function logout() {
+            // Redirect to login page
+            window.location.href = "./userlogin.html";
+        }
+    </script>
+</body>
+</html>

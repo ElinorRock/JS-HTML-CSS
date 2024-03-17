@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Data</title>
+    <style>
+        /* CSS styles for the table */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+        }
+        #employeeTable {
+            margin: 20px auto;
+            width: 80%;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+            font-weight: bold;
+        }
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+        .info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #333;
+        }
+        #goBackButton {
+            margin: 20px auto;
+            display: block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #goBackButton:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="info">
+        <p>Elinor Lebel</p>
+        <p>Credit: 7</p>
+    </div>
+    <h1>Employee Data</h1>
+    <div id="employeeTable"></div>
+    <button id="goBackButton">Go Back</button>
+
+    <script>
+        async function fetchAndPopulateTable() {
+            try {
+                const response = await fetch('https://localhost:44303/api/employeeShifts');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data from server');
+                }
+                const data = await response.json();
+    
+                var table = document.createElement("table");
+                var headerRow = table.insertRow();
+                // Create header cells
+                for (var header in data[0]) {
+                    var th = document.createElement("th");
+                    th.textContent = header;
+                    headerRow.appendChild(th);
+                }
+    
+                // Populate data into table
+                data.forEach(function(employee) {
+                    var row = table.insertRow();
+                    for (var key in employee) {
+                        var cell = row.insertCell();
+                        // Check if the value is an object
+                        if (typeof employee[key] === 'object') {
+                            // Flatten the nested object
+                            var nestedValue = flattenObject(employee[key]);
+                            cell.textContent = nestedValue;
+                        } else {
+                            cell.textContent = employee[key];
+                        }
+                    }
+                });
+    
+                // Append table to the DOM
+                document.getElementById("employeeTable").appendChild(table);
+            } catch (error) {
+                console.error('Error fetching employee data:', error);
+                document.getElementById("employeeTable").innerText = "Error fetching employee data";
+            }
+        }
+    
+        // Function to flatten nested objects
+        function flattenObject(obj) {
+            var flattened = '';
+            for (var prop in obj) {
+                if (typeof obj[prop] === 'object') {
+                    flattened += flattenObject(obj[prop]);
+                } else {
+                    flattened += obj[prop] + ' ';
+                }
+            }
+            return flattened.trim();
+        }
+
+        function goBack() {
+            // Navigate back to the previous page
+            window.history.back();
+        }
+    
+        fetchAndPopulateTable();
+    </script>
+</body>
+</html>
